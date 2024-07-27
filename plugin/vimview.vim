@@ -1,5 +1,13 @@
-let g:current_file_index = 0
+let g:delay = 1250
+let g:scroll_lines = 3
+let g:current_file_index = -1
 let g:files = []
+
+" Place cursor on last visible line
+function! LastLine()
+  execute "normal! gg"
+  execute "normal! L"
+endfunction
 
 " Function to shuffle a list using Fisher-Yates algorithm
 function! Shuffle(list)
@@ -14,11 +22,11 @@ function! Shuffle(list)
 endfunction
 
 function! ScrollDown(timer)
-  " Scroll down 3 lines without moving the cursor
-  execute "normal! 3\<C-E>"
+  " Scroll down 3 lines
+  execute "normal! " . g:scroll_lines . "j"
 
   " Check if we are at the end of the document
-  if line('w$') == line('$')
+  if line("w$") == line("$")
     echo "Reached the end of the document"
     call timer_stop(a:timer)
     call SwitchToNextFile()
@@ -35,10 +43,12 @@ function! SwitchToNextFile()
   endif
 
   " Open the next file
-  execute 'edit' g:files[g:current_file_index]
+  execute "edit" g:files[g:current_file_index]
+
+  call LastLine()
 
   " Restart the timer
-  let s:timer = timer_start(1250, 'ScrollDown', {'repeat': -1})
+  let s:timer = timer_start(g:delay, "ScrollDown", {"repeat": -1})
 endfunction
 
 function! Main()
@@ -57,10 +67,9 @@ function! Main()
   let g:current_file_index = 0
 
   " Open the first file
-  execute 'edit' g:files[g:current_file_index]
+  execute "edit" g:files[g:current_file_index]
 
-  " Start a timer to call ScrollDown every second
-  let s:timer = timer_start(1000, 'ScrollDown', {'repeat': -1})
+  call SwitchToNextFile()
 endfunction
 
 call Main()
