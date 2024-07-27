@@ -9,15 +9,17 @@ function! LastLine()
     execute "normal! L"
 endfunction
 
-" Function to shuffle a list using Fisher-Yates algorithm
+" Shuffle a list using Fisher-Yates algorithm
 function! Shuffle(list)
     let l = a:list
+
     for i in range(len(l) - 1, 1, -1)
         let j = rand() % (i + 1)
         let temp = l[i]
         let l[i] = l[j]
         let l[j] = temp
     endfor
+
     return l
 endfunction
 
