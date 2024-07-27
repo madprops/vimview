@@ -38,7 +38,7 @@ function! SwitchToNextFile()
   execute 'edit' g:files[g:current_file_index]
 
   " Restart the timer
-  let s:timer = timer_start(1000, 'ScrollDown', {'repeat': -1})
+  let s:timer = timer_start(1250, 'ScrollDown', {'repeat': -1})
 endfunction
 
 function! Main()
