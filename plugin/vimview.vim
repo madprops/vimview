@@ -1,3 +1,4 @@
+let g:extension = "py"
 let g:delay = 1250
 let g:scroll_lines = 3
 let g:current_file_index = -1
@@ -60,8 +61,8 @@ function! Main()
     " Clear the prompt
     echo ""
 
-    " Get python files
-    let all_files = split(glob("*.py"), "\n")
+    " Get files in current dir
+    let all_files = split(glob("*." . g:extension), "\n")
     let filtered = filter(all_files, 'v:val !~ "^_"')
     let g:files = Shuffle(filtered)
 
