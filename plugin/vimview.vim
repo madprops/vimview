@@ -1,4 +1,3 @@
-let g:extension = "py"
 let g:delay = 1250
 let g:scroll_lines = 3
 let g:current_file_index = -1
@@ -25,15 +24,16 @@ function! Shuffle(list)
 endfunction
 
 function! ScrollDown(timer)
-    " Scroll down 3 lines
-    execute "normal! " . g:scroll_lines . "j"
-
     " Check if we are at the end of the document
     if line("w$") == line("$")
         echo "Reached the end of the document"
         call timer_stop(a:timer)
         call SwitchToNextFile()
+    else
+        " Scroll down x lines
+        execute "normal! " . g:scroll_lines . "j"
     endif
+
 endfunction
 
 function! SwitchToNextFile()
@@ -62,12 +62,14 @@ function! Main()
     echo ""
 
     " Get files in current dir
-    let all_files = split(glob("*." . g:extension), "\n")
+    let py_files = split(glob("*.py"), "\n")
+    let txt_files = split(glob("*.txt"), "\n")
+    let all_files = py_files + txt_files
     let filtered = filter(all_files, 'v:val !~ "^_"')
     let g:files = Shuffle(filtered)
 
     if len(g:files) == 0
-        echo "No python files found"
+        echo "No files found"
         return
     endif
 
